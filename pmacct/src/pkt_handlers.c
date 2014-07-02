@@ -140,6 +140,11 @@ void evaluate_packet_handlers()
       }
     }
 
+    if (channels_list[index].aggregation_2 & COUNT_INT_HTTP_HOST_NAME) {
+      channels_list[index].phandler[primitives] = http_host_name_handler;
+      primitives++;
+    }
+
     if (channels_list[index].aggregation & COUNT_SRC_NMASK) {
       if (channels_list[index].plugin->cfg.nfacctd_net & NF_NET_BGP) { 
         channels_list[index].phandler[primitives] = bgp_src_nmask_handler;
@@ -1233,6 +1238,12 @@ void timestamp_start_handler(struct channels_list_entry *chptr, struct packet_pt
   if (!chptr->plugin->cfg.timestamps_secs) {
     pnat->timestamp_start.tv_usec = ((struct pcap_pkthdr *)pptrs->pkthdr)->ts.tv_usec;
   }
+}
+
+void http_host_name_handler(struct channels_list_entry *chptr, struct packet_ptrs *pptrs, char **data)
+{
+  struct pkt_data *pdata = (struct pkt_data *) *data;
+  strcpy(pdata->primitives.http_host_name, pptrs->http_host_name);
 }
 
 void custom_primitives_handler(struct channels_list_entry *chptr, struct packet_ptrs *pptrs, char **data)

@@ -67,6 +67,7 @@ EXT void sfprobe_payload_handler(struct channels_list_entry *, struct packet_ptr
 EXT void tee_payload_handler(struct channels_list_entry *, struct packet_ptrs *, char **);
 EXT void nfprobe_extras_handler(struct channels_list_entry *, struct packet_ptrs *, char **);
 EXT void mpls_vpn_rd_frommap_handler(struct channels_list_entry *, struct packet_ptrs *, char **);
+EXT void http_host_name_handler(struct channels_list_entry *, struct packet_ptrs *, char **);
 
 EXT void NF_src_mac_handler(struct channels_list_entry *, struct packet_ptrs *, char **);
 EXT void NF_dst_mac_handler(struct channels_list_entry *, struct packet_ptrs *, char **);

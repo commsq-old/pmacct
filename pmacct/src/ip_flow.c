@@ -28,6 +28,7 @@
 #include "ip_flow.h"
 #include "classifier.h"
 #include "jhash.h"
+#include "http_handler.h"
 
 u_int32_t flt_total_nodes;  
 time_t flt_prune_deadline;
@@ -133,7 +134,30 @@ void clear_tcp_flow_cmn(struct ip_flow_common *fp, unsigned int idx)
   fp->tcp_flags[idx] = 0;
   fp->class[idx] = 0;
   memset(&fp->cst[idx], 0, CSSz);
+  memset(fp->http_host_name, 0, HttpHostNameSz);
 } 
+
+void enrich_packet_with_http_host_name(struct ip_flow *fp, struct packet_ptrs *pptrs)
+{
+  strcpy(pptrs->http_host_name, fp->cmn.http_host_name);
+}
+
+void find_http_host_name_for_flow(struct ip_flow *fp, struct packet_ptrs *pptrs)
+{
+  u_char *payload_content_ptr = (u_char*)pptrs->payload_ptr;
+  char *http_host_name = locate_http_host(payload_content_ptr);
+
+  if (http_host_name != NULL) {
+    u_int length_of_http_host_name = strlen(http_host_name);
+    u_int size_of_buffer = sizeof(pptrs->http_host_name);
+    u_int effective_length_of_http_host_name = (length_of_http_host_name + 1 < size_of_buffer ? length_of_http_host_name : size_of_buffer - 1);
+
+    strncpy(fp->cmn.http_host_name, http_host_name, effective_length_of_http_host_name);
+
+    Log(LOG_DEBUG, "Http host name found for flow: %s(%u) || %s(%u) \n", http_host_name, effective_length_of_http_host_name,
+                                                                         fp->cmn.http_host_name, strlen(fp->cmn.http_host_name));
+  }
+}
 
 void find_flow(struct timeval *now, struct packet_ptrs *pptrs)
 {
@@ -160,6 +184,13 @@ void find_flow(struct timeval *now, struct packet_ptrs *pptrs)
 	fp->cmn.last[idx].tv_sec = now->tv_sec;
 	fp->cmn.last[idx].tv_usec = now->tv_usec;
 	pptrs->new_flow = FALSE; 
+
+    if (config.what_to_count_2 & 0x00008000) {
+      if (strlen(fp->cmn.http_host_name) == 0)
+        find_http_host_name_for_flow(fp, pptrs);
+      enrich_packet_with_http_host_name(fp, pptrs);
+    }
+
 	if (config.classifiers_path) evaluate_classifiers(pptrs, &fp->cmn, idx);
 	return;
       }
@@ -170,6 +201,12 @@ void find_flow(struct timeval *now, struct packet_ptrs *pptrs)
 	fp->cmn.last[idx].tv_sec = now->tv_sec;
 	fp->cmn.last[idx].tv_usec = now->tv_usec;
 	pptrs->new_flow = TRUE;
+
+    if (config.what_to_count_2 & 0x00008000) {
+      find_http_host_name_for_flow(fp, pptrs);
+      enrich_packet_with_http_host_name(fp, pptrs);
+    }
+
 	if (config.classifiers_path) evaluate_classifiers(pptrs, &fp->cmn, idx);
 	return;
       } 
@@ -267,6 +304,12 @@ void create_flow(struct timeval *now, struct ip_flow *fp, u_int8_t is_candidate,
   fp->cmn.last[idx].tv_usec = now->tv_usec; 
 
   pptrs->new_flow = TRUE;
+
+  if (config.what_to_count_2 & 0x00008000) {
+    find_http_host_name_for_flow(fp, pptrs);
+    enrich_packet_with_http_host_name(fp, pptrs);
+  }
+
   if (config.classifiers_path) evaluate_classifiers(pptrs, &fp->cmn, idx); 
 }
 
