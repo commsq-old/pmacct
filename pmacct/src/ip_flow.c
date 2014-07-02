@@ -134,7 +134,6 @@ void clear_tcp_flow_cmn(struct ip_flow_common *fp, unsigned int idx)
   fp->tcp_flags[idx] = 0;
   fp->class[idx] = 0;
   memset(&fp->cst[idx], 0, CSSz);
-  memset(fp->http_host_name, 0, HttpHostNameSz);
 } 
 
 void enrich_packet_with_http_host_name(struct ip_flow *fp, struct packet_ptrs *pptrs)
@@ -154,8 +153,8 @@ void find_http_host_name_for_flow(struct ip_flow *fp, struct packet_ptrs *pptrs)
 
     strncpy(fp->cmn.http_host_name, http_host_name, effective_length_of_http_host_name);
 
-    Log(LOG_DEBUG, "Http host name found for flow: %s(%u) || %s(%u) \n", http_host_name, effective_length_of_http_host_name,
-                                                                         fp->cmn.http_host_name, strlen(fp->cmn.http_host_name));
+    Log(LOG_DEBUG, "DEBUG Http host name found for flow: %s(%u) || %s(%u) \n", http_host_name, effective_length_of_http_host_name,
+                                                                               fp->cmn.http_host_name, strlen(fp->cmn.http_host_name));
   }
 }
 
@@ -203,7 +202,8 @@ void find_flow(struct timeval *now, struct packet_ptrs *pptrs)
 	pptrs->new_flow = TRUE;
 
     if (config.what_to_count_2 & 0x00008000) {
-      find_http_host_name_for_flow(fp, pptrs);
+      if (strlen(fp->cmn.http_host_name) == 0)
+        find_http_host_name_for_flow(fp, pptrs);
       enrich_packet_with_http_host_name(fp, pptrs);
     }
 
