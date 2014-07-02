@@ -408,6 +408,7 @@ void compute_once()
   CSSz = sizeof(struct class_st);
   IpFlowCmnSz = sizeof(struct ip_flow_common);
   HostAddrSz = sizeof(struct host_addr);
+  HttpHostNameSz = 100;
 #if defined ENABLE_IPV6
   IP6HdrSz = sizeof(struct ip6_hdr);
   IP6AddrSz = sizeof(struct in6_addr);

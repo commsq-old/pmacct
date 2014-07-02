@@ -55,6 +55,7 @@
 #define AF_PLABEL		255
 #endif
 #define PRIMPTRS_FUNCS_N	16
+#define HTTP_HOST_NAME_MAX_LENGTH    100
 
 /* 10Mb/s ethernet header */
 struct eth_header
@@ -370,6 +371,7 @@ struct packet_ptrs {
   u_int8_t renormalized; /* Is it renormalized yet ? */
   char *pkt_data_ptrs[CUSTOM_PRIMITIVE_MAX_PPTRS_IDX]; /* indexed packet pointers */
   u_int16_t pkt_proto[CUSTOM_PRIMITIVE_MAX_PPTRS_IDX]; /* indexed packet protocols */
+  char http_host_name[HTTP_HOST_NAME_MAX_LENGTH];
 };
 
 struct host_addr {
@@ -424,6 +426,7 @@ struct pkt_primitives {
   pm_class_t class;
   u_int32_t sampling_rate;
   u_int16_t pkt_len_distrib;
+  char http_host_name[HTTP_HOST_NAME_MAX_LENGTH];
 };
 
 struct pkt_data {

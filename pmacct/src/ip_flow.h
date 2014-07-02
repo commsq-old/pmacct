@@ -32,6 +32,7 @@
 #define FLOW_TABLE_PRUNE_INTERVAL 3600 
 #define FLOW_TABLE_EMER_PRUNE_INTERVAL 60
 #define DEFAULT_FLOW_BUFFER_SIZE 16384000 /* 16 Mb */
+#define HTTP_HOST_NAME_MAX_LENGTH 100
 
 struct context_chain {
   char *protocol;
@@ -56,6 +57,7 @@ struct ip_flow_common {
   struct context_chain *cc[2];
   /* conntrack hooks */
   void (*conntrack_helper)(time_t, struct packet_ptrs *);
+  char http_host_name[HTTP_HOST_NAME_MAX_LENGTH];
 };
 
 struct ip_flow {

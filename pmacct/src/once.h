@@ -16,5 +16,6 @@ EXT u_int32_t MyTLHdrSz, TCPFlagOff;
 EXT u_int32_t SFSampleSz, SFLAddressSz, SFrenormEntrySz;
 EXT u_int32_t PptrsSz, UDPHdrSz, CSSz, MyTCPHdrSz, IpFlowCmnSz; 
 EXT u_int16_t PbgpSz, PnatSz, PmplsSz;
+EXT u_int16_t HttpHostNameSz;
 
 #undef EXT
