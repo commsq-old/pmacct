@@ -101,6 +101,7 @@ static const struct _primitives_matrix_struct _primitives_matrix[] = {
   {"TIME", 1, 1, 1, 1, ""}, 
   {"timestamp_start", 1, 1, 1, 1, "Observation time or flow start time"},
   {"timestamp_end", 0, 0, 1, 0, "Flow end time"},
+  {"http_host_name", 1, 0, 0, 0, "Name of HTTP host in case of HTTP GET request"},
   {"", 0, 0, 0, 0, ""}
 };
 

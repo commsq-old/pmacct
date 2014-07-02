@@ -165,6 +165,7 @@ int cfg_key_aggregate(char *filename, char *name, char *value_ptr)
       Log(LOG_WARNING, "WARN ( %s ): pmacct was compiled with --disable-l2 but 'aggregate' contains a L2 primitive. Ignored.\n", filename);
     }
 #endif
+    else if (!strcmp(count_token, "http_host_name")) cfg_set_aggregate(filename, value, COUNT_INT_HTTP_HOST_NAME, count_token);
     else if (!strcmp(count_token, "tos")) cfg_set_aggregate(filename, value, COUNT_INT_IP_TOS, count_token);
     else if (!strcmp(count_token, "none")) cfg_set_aggregate(filename, value, COUNT_INT_NONE, count_token);
     else if (!strcmp(count_token, "src_as")) cfg_set_aggregate(filename, value, COUNT_INT_SRC_AS, count_token);

@@ -373,6 +373,15 @@ int main(int argc,char **argv, char **envp)
   /* Enforcing policies over aggregation methods */
   list = plugins_list;
   while (list) {
+
+    if (list->type.id == PLUGIN_ID_CORE) {
+      if (list->cfg.what_to_count_2 & 0x00008000) {
+        config.handle_flows = TRUE;
+        config.handle_fragments = TRUE;
+        Log(LOG_DEBUG, "Flow engine activated from http_host_name primitive\n");
+      }
+    }
+
     if (list->type.id != PLUGIN_ID_CORE) {
       /* applies to all plugins */
       if (config.classifiers_path && (list->cfg.sampling_rate || config.ext_sampling_rate)) {
