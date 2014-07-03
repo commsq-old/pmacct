@@ -152,9 +152,6 @@ void find_http_host_name_for_flow(struct ip_flow *fp, struct packet_ptrs *pptrs)
     u_int effective_length_of_http_host_name = (length_of_http_host_name + 1 < size_of_buffer ? length_of_http_host_name : size_of_buffer - 1);
 
     strncpy(fp->cmn.http_host_name, http_host_name, effective_length_of_http_host_name);
-
-    Log(LOG_DEBUG, "DEBUG Http host name found for flow: %s(%u) || %s(%u) \n", http_host_name, effective_length_of_http_host_name,
-                                                                               fp->cmn.http_host_name, strlen(fp->cmn.http_host_name));
   }
 }
 
