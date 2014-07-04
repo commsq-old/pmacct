@@ -299,6 +299,7 @@ void create_flow(struct timeval *now, struct ip_flow *fp, u_int8_t is_candidate,
   evaluate_tcp_flags(now, pptrs, &fp->cmn, idx); 
   fp->cmn.last[idx].tv_sec = now->tv_sec; 
   fp->cmn.last[idx].tv_usec = now->tv_usec; 
+  memset(fp->cmn.http_host_name, '\0', sizeof(fp->cmn.http_host_name));
 
   pptrs->new_flow = TRUE;
 

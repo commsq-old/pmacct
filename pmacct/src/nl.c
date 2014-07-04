@@ -168,6 +168,7 @@ int ip_handler(register struct packet_ptrs *pptrs)
 
     if (config.handle_flows) {
       pptrs->tcp_flags = FALSE;
+      memset(pptrs->http_host_name, '\0', sizeof(pptrs->http_host_name));
 
       if (pptrs->l4_proto == IPPROTO_TCP) {
         if (off_l4+TCPFlagOff+1 > caplen) {
